@@ -1,6 +1,7 @@
-import { useSearchParams } from "@remix-run/react";
+import { Outlet, useSearchParams } from "@remix-run/react";
+import { AppProvider } from "@shopify/shopify-app-remix/react";
 
-export default function App() {
+export default function Root() {
   const [searchParams] = useSearchParams();
   const host = searchParams.get("host");
 
