@@ -1,39 +1,43 @@
 // root.jsx
-import { useEffect } from "react";
-import { AppProvider } from "@shopify/shopify-app-remix/react"; // ✅ Correct import
+import { useEffect, useState } from "react";
+import { AppProvider } from "@shopify/shopify-app-remix/react";
 import { Outlet } from "@remix-run/react";
 
 export default function App() {
-  // Read host param from query string
-  const host = new URLSearchParams(window.location.search).get("host");
+  const [host, setHost] = useState(null);
 
+  // Only access window in the browser
   useEffect(() => {
-    if (!host) console.warn("No host param — App Bridge may fail.");
-  }, [host]);
+    const searchHost = new URLSearchParams(window.location.search).get("host");
+    if (!searchHost) {
+      console.warn("No host param — App Bridge may fail.");
+    }
+    setHost(searchHost);
+  }, []);
 
   return (
-    <html>
+    <html lang="en">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <title>Bliss Stock Manager Dashboard</title>
       </head>
       <body>
-        <AppProvider
-          config={{
-            apiKey: process.env.SHOPIFY_API_KEY,
-            host: host,
-            forceRedirect: true, // redirects outside Shopify
-          }}
-        >
+        {/* Render AppProvider only after host is set */}
+        {host ? (
+          <AppProvider
+            config={{
+              apiKey: process.env.SHOPIFY_API_KEY,
+              host: host,
+              forceRedirect: true,
+            }}
+          >
+            <Outlet />
+          </AppProvider>
+        ) : (
           <Outlet />
-        </AppProvider>
+        )}
       </body>
     </html>
   );
-  return ( 
-    <AppProvider>
-      <Outlet />
-    </AppProvider>
-    );
-  <h1>Bliss Stock Manager Dashboard</h1>;
 }
