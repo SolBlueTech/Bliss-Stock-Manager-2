@@ -1,30 +1,34 @@
-import {
-  Links,
-  Meta,
-  Outlet,
-  Scripts,
-  ScrollRestoration,
-} from "@remix-run/react";
+// root.jsx
+import { useEffect } from "react";
+import { AppProvider } from "@shopify/app-bridge-react";
+import { Outlet } from "@remix-run/react";
 
 export default function App() {
+  // Read host param from query string
+  const host = new URLSearchParams(window.location.search).get("host");
+
+  useEffect(() => {
+    if (!host) console.warn("No host param — App Bridge may fail.");
+  }, [host]);
+
   return (
     <html>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
-        <link rel="preconnect" href="https://cdn.shopify.com/" />
-        <link
-          rel="stylesheet"
-          href="https://cdn.shopify.com/static/fonts/inter/v4/styles.css"
-        />
-        <Meta />
-        <Links />
       </head>
       <body>
-        <Outlet />
-        <ScrollRestoration />
-        <Scripts />
+        <AppProvider
+          config={{
+            apiKey: process.env.SHOPIFY_API_KEY,
+            host: host,
+            forceRedirect: true, // redirects outside Shopify
+          }}
+        >
+          <Outlet />
+        </AppProvider>
       </body>
     </html>
   );
+  return <h1>Bliss Stock Manager Dashboard</h1>;
 }

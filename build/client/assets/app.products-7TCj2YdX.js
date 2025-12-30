@@ -1,0 +1,1 @@
+import{j as s,L as t}from"./components-TJrgxJd3.js";function n(){return s.jsxs("div",{style:{padding:24},children:[s.jsx("h1",{children:"Products"}),s.jsx("p",{children:"Click to sync all products from your store into the app database."}),s.jsx(t,{to:"/app/products/sync",children:"Run sync now"})]})}export{n as default};
