@@ -1,9 +1,10 @@
-import { Outlet, useSearchParams } from "@remix-run/react";
-import { AppProvider } from "@shopify/shopify-app-remix/react";
+import { useSearchParams } from "@remix-run/react";
 
-export default function Root() {
+export default function App() {
   const [searchParams] = useSearchParams();
   const host = searchParams.get("host");
+
+  console.log("host:", host); // ✅ log here inside the component
 
   if (!host) {
     return <div>Loading Shopify App...</div>;
