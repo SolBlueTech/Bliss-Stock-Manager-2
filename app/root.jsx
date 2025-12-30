@@ -1,6 +1,6 @@
 // root.jsx
 import { useEffect } from "react";
-import { AppProvider } from "@shopify/app-bridge-react";
+import { AppProvider } from "@shopify/shopify-app-remix/react"; // ✅ Correct import
 import { Outlet } from "@remix-run/react";
 
 export default function App() {
@@ -30,5 +30,10 @@ export default function App() {
       </body>
     </html>
   );
-  return <h1>Bliss Stock Manager Dashboard</h1>;
+  return ( 
+    <AppProvider>
+      <Outlet />
+    </AppProvider>
+    );
+  <h1>Bliss Stock Manager Dashboard</h1>;
 }
