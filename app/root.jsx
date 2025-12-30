@@ -1,20 +1,9 @@
-// root.jsx
-import { useEffect, useState } from "react";
-import { AppProvider } from "@shopify/shopify-app-remix/react";
-import { Outlet } from "@remix-run/react";
+import { useSearchParams } from "@remix-run/react";
 
 export default function App() {
-  const [host, setHost] = useState(null);
+  const [searchParams] = useSearchParams();
+  const host = searchParams.get("host");
 
-  useEffect(() => {
-    // Only run in the browser
-    const urlParams = new URLSearchParams(window.location.search);
-    const hostParam = urlParams.get("host");
-    if (!hostParam) console.warn("No host param — App Bridge may fail.");
-    setHost(hostParam);
-  }, []);
-
-  // Show a loading placeholder until host is available
   if (!host) {
     return <div>Loading Shopify App...</div>;
   }
