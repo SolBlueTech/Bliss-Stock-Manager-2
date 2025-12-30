@@ -6,14 +6,18 @@ import { Outlet } from "@remix-run/react";
 export default function App() {
   const [host, setHost] = useState(null);
 
-  // Only access window in the browser
   useEffect(() => {
-    const searchHost = new URLSearchParams(window.location.search).get("host");
-    if (!searchHost) {
-      console.warn("No host param — App Bridge may fail.");
-    }
-    setHost(searchHost);
+    // Only run in the browser
+    const urlParams = new URLSearchParams(window.location.search);
+    const hostParam = urlParams.get("host");
+    if (!hostParam) console.warn("No host param — App Bridge may fail.");
+    setHost(hostParam);
   }, []);
+
+  // Show a loading placeholder until host is available
+  if (!host) {
+    return <div>Loading Shopify App...</div>;
+  }
 
   return (
     <html lang="en">
@@ -23,20 +27,15 @@ export default function App() {
         <title>Bliss Stock Manager Dashboard</title>
       </head>
       <body>
-        {/* Render AppProvider only after host is set */}
-        {host ? (
-          <AppProvider
-            config={{
-              apiKey: process.env.SHOPIFY_API_KEY,
-              host: host,
-              forceRedirect: true,
-            }}
-          >
-            <Outlet />
-          </AppProvider>
-        ) : (
+        <AppProvider
+          config={{
+            apiKey: process.env.SHOPIFY_API_KEY,
+            host,
+            forceRedirect: true,
+          }}
+        >
           <Outlet />
-        )}
+        </AppProvider>
       </body>
     </html>
   );
